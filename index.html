@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <title>Palpiteco</title>
+
+    
+  </head>
+
+  <body>
+    
+    <header>
+      <nav id="nav_bar">
+          <ul>
+              <li><a href="#">Sobre</a></li>
+              <li><a href="#">Recordes</a></li>
+              <li id="entrar"><a href="#">Entrar</a></li>
+          </ul>
+      </nav>
+  </header>
+
+    <div id="logo">
+      <img src="logo.png" alt="logo palpiteco" width="420px">
+    </div>
+
+    <p id="texto">Nós escolhemos um número de 1 a 100. Você tenta descobrir em até 10 tentativas. O jogo lhe informa se o palpiteco foi maior ou menor.</p>
+
+    <div class="form">
+      <label for="guessField">Dê o seu Palpiteco: </label>
+      <input type="text" id="guessField" class="guessField">
+      <input type="submit" id="submit" value="Dalhe" class="guessSubmit">
+    </div>
+
+    <div class="resultParas">
+      <p class="guesses"></p>
+      <p class="lastResult"></p>
+      <p class="lowOrHi"></p>
+    </div>
+
+    <script>
+
+    document.addEventListener("keypress", function(e) {
+      if(e.key === 'Enter') {
+      
+          var btn = document.querySelector("#submit");
+        
+        btn.click();
+      
+      }
+    });
+
+    let randomNumber = Math.floor(Math.random() * 100) + 1;
+
+    const guesses = document.querySelector('.guesses');
+    const lastResult = document.querySelector('.lastResult');
+    const lowOrHi = document.querySelector('.lowOrHi');
+
+    const guessSubmit = document.querySelector('.guessSubmit');
+    const guessField = document.querySelector('.guessField');
+    
+
+    let guessCount = 1;
+    let resetButton;
+    guessField.focus();
+
+    function checkGuess() {
+  const userGuess = Number(guessField.value);
+  if (guessCount === 1) {
+    guesses.textContent = 'Últimos Palpitecos: ';
+  }
+  guesses.textContent += userGuess + ' ';
+
+  if (userGuess === randomNumber) {
+    lastResult.textContent = 'Pimba! Acertasse, cavalo!';
+    lastResult.style.backgroundColor = 'green';
+    lowOrHi.textContent = '';
+    setGameOver();
+  } else if (guessCount === 10) {
+    lastResult.textContent = '!!!Perdeu playboy!!!';
+    lowOrHi.textContent = '';
+    setGameOver();
+  } else {
+    lastResult.textContent = 'Nã, na ni na não!';
+    lastResult.style.backgroundColor = 'red';
+    if(userGuess < randomNumber) {
+      lowOrHi.textContent = 'O número é maiorzinho';
+    } else if(userGuess > randomNumber) {
+      lowOrHi.textContent = 'O número é menorzinho';
+    }
+    
+  }
+
+  guessCount++;
+  guessField.value = '';
+  guessField.focus();
+}
+
+guessSubmit.addEventListener('click', checkGuess);
+
+function setGameOver() {
+  guessField.disabled = true;
+  guessSubmit.disabled = true;
+  resetButton = document.createElement('button');
+  resetButton.textContent = 'Começar novo jogo (viciado)';
+  document.body.append(resetButton);
+  resetButton.addEventListener('click', resetGame);
+}
+
+function resetGame() {
+  guessCount = 1;
+
+  const resetParas = document.querySelectorAll('.resultParas p');
+  for (const resetPara of resetParas) {
+    resetPara.textContent = '';
+  }
+
+  resetButton.parentNode.removeChild(resetButton);
+
+  guessField.disabled = false;
+  guessSubmit.disabled = false;
+  guessField.value = '';
+  guessField.focus();
+
+  lastResult.style.backgroundColor = 'white';
+
+  randomNumber = Math.floor(Math.random() * 100) + 1;
+}
+
+    </script>
+  </body>
+</html>
